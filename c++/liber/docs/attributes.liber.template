@@ -1,0 +1,13 @@
+{% for attribute in attributes %}
+
+{% if attribute.name != "content" %}
+$attr {{attribute.name}}
+$attr_description {{attribute.description}}
+$attr_type {{attribute.type}}
+{% if attribute.allowed_values %}
+({% for value in attribute.allowed_values %}{{value}}{% if not loop.last %} | {% endif %}{% endfor %})
+{% endif %}
+$attr_default {{attribute.default_value}}
+{% endif %}
+
+{% endfor %}

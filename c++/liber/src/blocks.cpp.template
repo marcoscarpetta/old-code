@@ -1,0 +1,110 @@
+#include "blocks.h"
+
+Keyword parse_keyword(const std::string &value)
+{
+    {% for keyword in keywords %}
+    if (value.compare("{{keyword}}") == 0)
+        return Keyword::{{keyword|replace("-", "_")}};
+    {% endfor %}
+    return Keyword::unset;
+}
+
+{% for block_type in block_types %}
+
+{% if block_type != "base" %}{{block_type|title}}{% endif %}Block::{% if block_type != "base" %}{{block_type|title}}{% endif %}Block() {% if block_type != "base" %} : Block() {% endif %}
+{
+    {% for property in block_types[block_type] %}
+    
+    this->m_{{property.cpp_name}}_default = true;
+    
+    {% if property.type == "string" %}
+    this->m_{{property.cpp_name}} = {{property.default_value}};
+    {% elif property.type == "color" or property.type == "length" %}
+    this->m_{{property.cpp_name}} = {{parsers[property.type]}}({{property.default_value}});
+    {% else %}
+    this->m_{{property.cpp_name}} = {{property.default_value}};
+    {% endif %}
+    
+    {% endfor %}
+}
+
+BlockType {% if block_type != "base" %}{{block_type|title}}{% endif %}Block::block_type()
+{
+    return BlockType::{{block_type}};
+}  
+
+void {% if block_type != "base" %}{{block_type|title}}{% endif %}Block::add_properties_from({% if block_type != "base" %}{{block_type|title}}{% endif %}Block *from, bool force)
+{
+    {% if block_type != "base" %}
+    this->Block::add_properties_from(from);
+    {% endif %}
+    
+    {% for property in block_types[block_type] %}
+    
+    if (!from->m_{{property.cpp_name}}_default)
+        if (force || this->m_{{property.cpp_name}}_default)
+            this->set_{{property.cpp_name}}(from->m_{{property.cpp_name}});
+            
+    {% endfor %}
+}
+
+void {% if block_type != "base" %}{{block_type|title}}{% endif %}Block::set(const std::string &property, const std::string &value)
+{
+    {% if block_type != "base" %}
+    this->Block::set(property, value);
+    {% endif %}
+    
+    {% for property in block_types[block_type] %}
+    
+    {% if property.type == "string" %}
+    
+    if (property.compare("{{property.name}}") == 0)
+    {
+        this->set_{{property.cpp_name}}(value);
+        return;
+    }
+    
+    {% else %}
+    
+    if (property.compare("{{property.name}}") == 0)
+    {
+        try
+        {
+            this->set_{{property.cpp_name}}({{parsers[property.type]}}(value));
+        }
+        catch (...)
+        {
+            {% if property.type == "color" or property.type == "length" %}
+            this->set_{{property.cpp_name}}({{parsers[property.type]}}({{property.default_value}}));
+            {% else %}
+            this->set_{{property.cpp_name}}({{property.default_value}});
+            {% endif %}
+        }
+        return;
+    }
+    {% endif %}
+            
+    {% endfor %}
+}
+    
+{% for property in block_types[block_type] %}
+    
+{{pass_types[property.type]}} {% if block_type != "base" %}{{block_type|title}}{% endif %}Block::{{property.cpp_name}}()
+{
+    return this->m_{{property.cpp_name}};
+}
+
+void {% if block_type != "base" %}{{block_type|title}}{% endif %}Block::set_{{property.cpp_name}}({{pass_types[property.type]}} value)
+{
+    this->m_{{property.cpp_name}} = value;
+    this->m_{{property.cpp_name}}_default = false;
+}
+
+bool {% if block_type != "base" %}{{block_type|title}}{% endif %}Block::{{property.cpp_name}}_is_default()
+{
+    return this->m_{{property.cpp_name}}_default;
+}
+
+{% endfor %}
+
+{% endfor %}

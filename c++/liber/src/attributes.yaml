@@ -1,0 +1,271 @@
+base:
+ - name: content
+   type: string
+   default_value: ""
+   
+ - name: id
+   type: string
+   default_value: ""
+   description: the id of the block. Must be unique over the entire document
+
+ - name: background-color
+   type: color
+   default_value: white
+   inherit: true
+   description: the background color of the block
+
+ - name: margin-top
+   type: length
+   default_value: 0
+   description: the top margin of the block
+
+ - name: margin-bottom
+   type: length
+   default_value: 0
+   description: the bottom margin of the block
+
+ - name: margin-left
+   type: length
+   default_value: 0
+   description: the left margin of the block
+
+ - name: margin-right
+   type: length
+   default_value: 0
+   description: the right margin of the block
+
+ - name: padding-top
+   type: length
+   default_value: 0
+   description: the top padding of the block
+
+ - name: padding-bottom
+   type: length
+   default_value: 0
+   description: the bottom padding of the block
+
+ - name: padding-left
+   type: length
+   default_value: 0
+   description: the left padding of the block
+
+ - name: padding-right
+   type: length
+   default_value: 0
+   description: the right padding of the block
+
+page:
+ - name: width
+   type: length
+   default_value: 210mm
+   description: the width of pages starting from this block
+
+ - name: height
+   type: length
+   default_value: 297mm
+   description: the height of pages starting from this block
+
+ - name: column-count
+   type: int
+   default_value: 1
+   description: number of columns of the page starting from this block
+
+ - name: column-fill
+   type: keyword
+   allowed_values: [sequential, balance]
+   default_value: sequential
+   description: how to fill the columns of the page
+   
+ - name: column-gap
+   type: length
+   default_value: 0
+   description: spacing between page's columns
+   
+ - name: numbering-start
+   type: int
+   default_value: 1
+   description: the number from which start numbering pages starting from the current one
+
+ - name: numbering-type
+   type: keyword
+   allowed_values: [number, letter, capital-letter, roman]
+   default_value: number
+   description: the type of numbering
+
+text:
+ - name: special
+   type: keyword
+   allowed_values: [none, header-left, header-center, header-right, footer-left,
+                    footer-center, footer-right, asciimath]
+   default_value: none
+   description: specifies if this block has a special function
+
+ - name: font-name
+   type: string
+   default_value: Arial
+   inherit: true
+   description: the name of the font to be used for this block
+   
+ - name: font-size
+   type: length
+   default_value: 12
+   inherit: true
+   description: font's size for this block
+   
+ - name: bold
+   type: bool
+   default_value: false
+   inherit: true
+   description: specifies whether the font is bold
+   
+ - name: italic
+   type: bool
+   default_value: false
+   inherit: true
+   description: specifies whether the font is italic
+   
+ - name: inline
+   cpp_name: is_inline
+   type: bool
+   default_value: false
+   description: append this block to the previous first non-inline text block
+   
+ - name: text-align
+   type: keyword
+   default_value: left
+   allowed_values: [left, right, center, justify, justify-all]
+   inherit: true
+   description: specifies the text alignment for this block
+   
+ - name: text-decoration
+   type: keyword
+   allowed_values: [none, underline, overline, line-through]
+   default_value: none
+   inherit: true
+   description: text's decoration
+   
+ - name: text-indent
+   type: length
+   default_value: 0
+   description: text indentation (from the second line)
+
+ - name: page-break-after
+   type: bool
+   default_value: 1
+   description: whether there can be a page break after this block
+
+ - name: page-break-inside
+   type: bool
+   default_value: 1
+   description: whether there can be a page break inside this block
+
+ - name: line-height
+   type: float
+   default_value: 1.2
+   inherit: true
+   description: the total line height over font size ratio
+
+ - name: preformatted
+   type: bool
+   default_value: 0
+   inherit: true
+   description: whether the content of the block if preformatted
+   
+ - name: numbering-start
+   type: int
+   default_value: 1
+   description: the number from which start numbering items of this class in the numbering hierarchy
+   
+ - name: numbering-name
+   type: string
+   default_value: ""
+   description: the name of this class in the numbering hierarchy
+   
+ - name: numbering-parent
+   type: string
+   default_value: ""
+   description: the $inline_b numbering-name $inline of the parent of this numbering class
+   
+ - name: numbering-string
+   type: string
+   default_value: "{{number}}"
+   description: >
+     a string that will be appended on start of this block's content.
+     "{{number}}" will be replaced with the number calculated according to the
+     $inline_b numbering-number $inline property
+
+ - name: numbering-number
+   type: string
+   default_value: ""
+   description: >
+     a string representing the numbering of this block. Each
+     occurence of "{{numbering-name}}" will be replaced with the correct number.
+     Example "Paragraph {{title1}}.{{title2}}.{{title3}}"
+
+ - name: numbering-reference
+   type: string
+   default_value: "{{number}}"
+   description: this will be the content of a block referencing this block, which has a void content
+   
+ - name: numbering-type
+   type: keyword
+   allowed_values: [number, letter, capital-letter, roman]
+   default_value: number
+   description: the type of numeration for this block
+
+ - name: target-id
+   type: string
+   default_value: ""
+   description: the $inline_b id $inline of the referred block
+   
+ - name: target-name
+   type: string
+   default_value: ""
+   description: the $inline_b numbering-name $inline of the referred class of blocks in the numbering hierarchy
+   
+ - name: fill
+   type: string
+   default_value: ""
+   description: a string of characters to repeat until the last line of the block fills the page width
+   
+ - name: caption
+   type: bool
+   default_value: false
+   description: whether this block is the caption of the previous image block
+
+ - name: color
+   type: color
+   default_value: black
+   inherit: true
+   description: the color of the text
+        
+image:
+ - name: inline
+   cpp_name: is_inline
+   type: bool
+   default_value: false
+   description: >
+     append this block to the previous first non-inline text block
+     or, as a subfigure, to the previous image block
+
+ - name: width
+   type: length
+   default_value: 0
+   description: the width of the image (image height changes proportionally)
+
+ - name: height
+   type: length
+   default_value: 0
+   description: the height of the image (image width changes proportionally)
+
+space:
+ - name: type
+   type: keyword
+   allowed_values: [new-page, vertical]
+   default_value: new-page
+   description: specifies the type of space to insert
+
+ - name: height
+   type: length
+   default_value: 0
+   description: the vertical space to reserve (valid only if type is $inline_b new-page $inline )

@@ -1,0 +1,51 @@
+#include "baseclasses.h"
+
+#ifndef BLOCKS_H
+#define BLOCKS_H
+
+enum class BlockType {
+    {% for block_type in block_types %}
+    {{block_type}}{% if not loop.last %},{% endif %}
+    {% endfor %}
+};
+
+enum class Keyword {
+    unset,
+    {% for keyword in keywords %}
+    {{keyword|replace("-", "_")}}{% if not loop.last %},{% endif %}
+    {% endfor %}
+};
+
+Keyword parse_keyword(const std::string &value);
+
+{% for block_type in block_types %}
+class {% if block_type != "base" %}{{block_type|title}}Block : public Block{% else %} Block {% endif %}
+{
+public:
+    {% if block_type != "base" %}{{block_type|title}}{% endif %}Block();
+    
+    virtual BlockType block_type();
+    
+    virtual void add_properties_from({% if block_type != "base" %}{{block_type|title}}{% endif %}Block *from, bool force=false);
+    
+    virtual void set(const std::string &property, const std::string &value);
+    
+    {% for property in block_types[block_type] %}
+    
+    {{pass_types[property.type]}} {{property.cpp_name}}();
+    void set_{{property.cpp_name}}({{pass_types[property.type]}} value);
+    bool {{property.cpp_name}}_is_default();
+    
+    {% endfor %}
+protected:
+    {% for property in block_types[block_type] %}
+    
+    {{store_types[property.type]}} m_{{property.cpp_name}};
+    bool m_{{property.cpp_name}}_default;
+    
+    {% endfor %}
+};
+
+{% endfor %}
+
+#endif 

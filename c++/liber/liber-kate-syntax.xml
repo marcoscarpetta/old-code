@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<language name="liber" version="1" kateversion="2.4" section="Sources" extensions="*.liber">
+
+    <highlighting>
+        <list name="block">
+            <item>#text</item>
+            <item>#page</item>
+            <item>#image</item>
+            <item>#space</item>
+        </list>
+        
+        <contexts>
+            <context attribute="Normal Text" lineEndContext="#stay" name="normal" >
+                <RegExpr attribute="Escape" context="#stay" String="\\{1}.{1}" />
+                <StringDetect attribute="Keyword" context="include" String="#include" />
+                <StringDetect attribute="Keyword" context="define" String="#define" />
+                <DetectChar attribute="Macro Name" context="macro-call" char="$" />
+                <keyword attribute="Keyword" context="attributes" String="block" />
+            </context>
+            
+            <context attribute="Escape" lineEndContext="normal" name="escape">
+                <RegExpr attribute="Escape" context="normal" String=".{1}" />
+            </context>
+            
+            <context attribute="Command" lineEndContext="normal" name="include">
+                <DetectChar attribute="Normal Text" context="#stay" char=" " />
+            </context>
+            
+            <context attribute="Command" lineEndContext="normal" name="define">
+                <DetectChar attribute="Normal Text" context="define-name" char=" " />
+            </context>
+            
+            <context attribute="Macro Name" lineEndContext="define-content" name="define-name">
+            </context>
+            
+            <context attribute="define Content" lineEndContext="normal" name="define-content">
+                <RegExpr attribute="define Content" context="#stay" String="[^\\]" />
+                <LineContinue attribute="define Content" context="#stay" char="\" />
+            </context>
+            
+            <context attribute="Normal Text" lineEndContext="#stay" name="attributes" >
+                <RegExpr attribute="Attribute Name" context="attribute-value" String="[a-z-]{1,}={1}" />
+                
+                <DetectChar attribute="Macro Name" context="macro-call" char="$" />
+                <keyword attribute="Keyword" context="attributes" String="block" />
+                <StringDetect attribute="Keyword" context="include" String="#include" />
+                <StringDetect attribute="Keyword" context="define" String="#define" />
+                
+                <RegExpr attribute="Normal Text" context="normal" String="[^\s]{1,}\s{1}" />
+                <RegExpr attribute="Normal Text" context="normal" String="[^a-z-=\s]" />
+            </context>
+            
+            <context attribute="Attribute Value" lineEndContext="normal" name="attribute-value" >
+                <DetectChar attribute="Attribute Value" context="#stay" char="&quot;" />
+                <RegExpr attribute="Attribute Value" context="attributes" String="[^\\]{1}&quot;{1}" />
+            </context>
+            
+            <context attribute="Macro Name" lineEndContext="#stay" name="macro-call" >
+                <RegExpr attribute="Macro Name" context="macro-call-name" String="[A-Za-z_]" />
+                <RegExpr attribute="Normal Text" context="normal" String="[^A-Za-z_]" />
+            </context>
+            
+            <context attribute="Macro Name" lineEndContext="normal" name="macro-call-name" >
+                <RegExpr attribute="Macro Name" context="#stay" String="[A-Za-z0-9_]" />
+                <RegExpr attribute="Normal Text" context="attributes" String="[^A-Za-z0-9_]" />
+            </context>
+        </contexts>
+        
+        <itemDatas>
+            <itemData name="Normal Text" defStyleNum="dsNormal" />
+            <itemData name="Keyword" color="#ca0" />
+            <itemData name="String" defStyleNum="dsString" />
+            <itemData name="Escape" color="#55f" />
+            <itemData name="define Content" color="#000" backgroundColor="#ddd"/>
+            <itemData name="Macro Name" color="#00f" />
+            <itemData name="Attribute Name" color="#595" />
+            <itemData name="Attribute Value" color="#f55" />
+        </itemDatas>
+    </highlighting>
+    
+    <general>
+        <keywords casesensitive="1"/>
+    </general>
+</language>

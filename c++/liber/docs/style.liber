@@ -1,0 +1,68 @@
+#define a4_page
+#page width="210mm" height="297mm"  margin-top="25mm" margin-bottom="25mm" \
+margin-left="20mm" margin-right="20mm"
+
+#define new_page
+#space type="new-page"
+
+#define inline
+#text inline="1" italic="0" bold="0"
+
+#define inline_b
+#text inline="1" bold="1" italic="0"
+
+#define inline_i
+#text inline="1" italic="1" bold="0"
+
+#define base_text
+#text font-name="Dejavu Serif" padding-top="10mm" padding-bottom="5mm"
+
+#define code
+#text font-name="Dejavu Sans Mono" color="rgb(20, 150, 20)" preformatted="1"
+
+#define ul
+$base_text padding-top="0" padding-bottom="12" padding-left="10mm" • 
+
+#define main_title
+$base_text font-size="40" padding-bottom="10mm" italic="1" text-align="center"
+
+#define toc_item
+$base_text padding-top="0mm" padding-bottom="5mm" font-size="16"
+
+#define title1
+$base_text font-size="26" text-align="center" \
+numbering-name="title1" numbering-number="{{title1}}" numbering-string="{{number}}"
+
+#define title2
+$base_text font-size="18" \
+numbering-name="title2" numbering-parent="title1" \
+numbering-number="{{title1}}.{{title2}}" numbering-string="{{number}}"
+
+#define title3
+$base_text font-size="14" \
+numbering-name="title3" numbering-parent="title2" \
+numbering-number="{{title1}}.{{title2}}.{{title3}}" numbering-string="{{number}}"
+
+#define body
+$base_text font-size="12" bold="0" italic="0" line-height="1.5" \
+text-align="justify" padding-top="5mm" padding-bottom="5mm"
+
+#define attr
+$base_text bold="1" padding-top="5mm" padding-bottom="5mm" color="blue" numbering-name="attribute"
+
+#define attr_description
+$base_text italic="1" padding-left="10mm" padding-top="0mm" padding-bottom="5mm" \
+Description $inline italic="0" :
+
+#define attr_default
+$base_text italic="1" padding-left="10mm" padding-top="0mm" padding-bottom="5mm" \
+Default value $inline italic="0" :
+
+#define attr_type
+$base_text italic="1" padding-left="10mm" padding-top="0mm" padding-bottom="5mm" \
+Value type $inline italic="0" :
+
+#define fig_caption
+$base_text numbering-name="figure" numbering-parent="title1" \
+numbering-string="Figure {{number}}:" numbering-number="{{title1}}.{{figure}}" \
+numbering-reference="figure {{number}}" text-align="center" padding-top="5mm" padding-bottom="5mm"

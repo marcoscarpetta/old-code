@@ -1,0 +1,219 @@
+#include style.liber
+
+#define version
+0.1 alpha
+
+$a4_page
+
+$main_title
+Liber $version documentation
+
+#space type="vertical" height="150mm"
+
+$body
+This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+International License. To view a copy of this license, visit
+http://creativecommons.org/licenses/by-sa/4.0/.
+
+$new_page
+
+$base_text font-size="24" margin-bottom="15mm"
+Table of contents
+
+$toc_item target-name="title1"
+{{number}} {{content}} $inline fill="." {{page}}
+
+$toc_item target-name="title2" padding-left="10mm"
+{{number}} {{content}} $inline fill="." {{page}}
+
+$toc_item target-name="title3" padding-left="20mm"
+{{number}} {{content}} $inline fill="." {{page}}
+
+$a4_page numbering-start="1"
+$base_text special="footer-right"
+{{page}}
+
+$title1
+Introduction
+
+$title2
+Aims
+
+$body
+This project's aim is to provide a new text format and a software to render it
+to pdf.
+
+$body
+We want to provide as much features as possible, while keeping simple and
+fast to write documents.
+
+$title1
+Base Concepts
+
+$title2
+Including files
+
+$body
+It is possible to include external files into the main file. One can do this
+with the following command:
+
+$code
+\#include path/to/filename.liber
+
+$body
+$inline_i filename.liber $inline's content is simply written instead of the include line.
+Its path can be absolute or relative to the file in which it is included.
+
+$title2
+Macros
+
+$body
+To define a macro use the "\#define" command. It has the following syntax:
+
+$code \#define macro_name
+macro content, line 1 \\
+macro content, line 2 \\
+[...]
+macro content, last line
+
+$body
+$inline_i macro_name $inline can contain uppercase and lowercase letters, numbers
+(not at the first position) and underscores (_). Macros definitions with wrong
+names will be ignored.
+
+$body
+The content of a macro can be split into more lines terminating a line with
+the '\\' character. It can contain any command except \#include and \#define.
+
+$body
+The calls to a macro are replaced by its content. A macro call has the following
+form:
+
+$code
+\$macro_name
+
+$body
+A macro can be redefined or extended as follows:
+
+$code \#define macro_name
+macro content
+
+\#define macro_name
+new macro content
+
+\#define macro_name
+\$macro_name appended content
+
+$title2
+Blocks
+
+$title3
+General syntax
+
+$body
+Each block contains some content: text, image or other special things. A block
+can be defined as follows:
+
+$code \#block_type attribute1="value" attribute2="value" content
+more content
+
+$body
+$inline_i block_type $inline can be one the following:
+
+$ul text
+$ul image
+$ul page
+
+$body
+Each type of block will be descripted in details below.
+
+$body
+A block ends when another one starts.
+
+$title3
+Attributes
+
+$body
+Each block has a set of attributes that control its appearence and content.
+Attributes can be set after the block definition in the form 
+attribute-name="attribute value" and attributes definitions are separeted by
+spaces. The type of the value of an attribute must be of the following:
+
+$ul $inline_i boolean $inline: can assume values "0" (false) and "1" (true)
+$ul $inline_i int $inline: positive and negative integers
+$ul $inline_i float $inline: positive and negative floating point numbers
+$ul $inline_i length $inline: a floating point number followed by a unit that represents a length
+on a printed page. Default unit is the point. To use millimeters add "mm" after
+the number ("2mm")
+$ul $inline_i string $inline: a string of characters
+$ul $inline_i keyword $inline: a string of characters from a list of possible ones
+
+
+$body
+Some attributes are valid for more types of blocks. Here there is a list of these
+attributes:
+
+#include base_attributes.liber
+
+$title3
+\#page block
+
+$body This type of block controls the page properties. Its content will be ignored.
+
+$body
+Page blocks can have some specific attributes:
+
+#include page_attributes.liber
+
+$title3
+\#text block
+
+$body
+Text blocks are used to display texts. The content of the block is the text to
+be displayed.
+
+$body
+Text blocks can have some specific attributes:
+
+#include text_attributes.liber
+
+$title3
+\#image block
+
+$body
+Image blocks are used to display images. The content of the block is the
+filename of the image to be displayed.
+
+$body
+Image blocks can have some specific attributes:
+
+#include image_attributes.liber
+
+$title3
+\#space block
+
+$body
+Space blocks are used to reserve some vertical space inside the page
+
+$body
+Space blocks can have some specific attributes:
+
+#include space_attributes.liber
+
+$a4_page numbering-start="1" numbering-type="roman"
+$base_text special="footer-right"
+{{page}}
+
+$title1
+Appendix
+
+$title2
+Attributes index
+
+$toc_item target-name="attribute" color="black" font-size="14"
+{{content}} $inline fill="." {{page}}
+
+$a4_page numbering-start="1"
+
+$body
+This document was created using Liber $version.
