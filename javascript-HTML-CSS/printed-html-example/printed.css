@@ -1,0 +1,37 @@
+@page {
+  margin: 27mm 0mm;
+  size: 210mm 297mm;
+}
+
+body {
+  width: 178mm;
+  margin: 0mm 16mm;
+  padding: 0mm 0mm;
+}
+
+#toc {
+  line-height: 1;
+  text-align: left;
+  page-break-after: always;
+}
+
+#toc .pageNumber {
+  float: right;
+  display: inline-block;
+}
+
+.sectionToc {
+  margin-left: 1cm;
+}
+
+.subsectionToc {
+  margin-left: 2cm;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:visited {
+  color: blue;
+}

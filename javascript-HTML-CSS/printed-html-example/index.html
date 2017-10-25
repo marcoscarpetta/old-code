@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<!--link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css"-->
+	<link rel="stylesheet" href="default.min.css">
+	<!--script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script-->
+	<script src="highlight.min.js"></script>
+	<script type="text/javascript" src="printed.js"></script>
+	<link rel="stylesheet" type="text/css" href="printed.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript">
+		hljs.configure({tabReplace: '  '});
+		hljs.initHighlightingOnLoad();
+
+		window.addEventListener("load", function() {
+			var versions = document.querySelectorAll(".ver");
+			for (var i=0; i<versions.length; i++)
+			{
+				versions[i].innerHTML = printedHtml.version;
+			}
+
+			var a = document.querySelectorAll("a");
+			for (var i=0; i<a.length; i++)
+			{
+				a[i].href = a[i].href.replace("%ver%", printedHtml.version);
+			}
+
+			printedHtml.xhr("structure.json", function(resp) {
+			  var structure = document.getElementById("structure_json_code");
+				structure.innerHTML = "\n"+resp+"\n";
+
+				printedHtml.xhr("example.html", function(html) {
+					var example = document.getElementById("example_html_code");
+					while (html.search("<") > -1) html = html.replace("<", "&lt;");
+					while (html.search(">") > -1) html = html.replace(">", "&gt;");
+					example.innerHTML = "\n"+html+"\n";
+
+					hljs.highlightBlock(structure);
+					hljs.highlightBlock(example);
+					printedHtml.init();
+				});
+			});
+		});
+	</script>
+</head>
+
+<body>
+
+	<section style="page-break-after:always">
+		<span style="font-size: 2em; margin: 3cm 0 2cm 0; display: block; text-align: center;">
+			Printed html example
+		</span>
+
+		<span style="font-size: 1.1em; display:block; text-align: center;">
+			Version <span class="ver"></span>
+		</span>
+	</section>
+
+	<section id="toc">
+
+		<span style="font-size: 2em; margin: 1cm 0; display:block">Table of Contents</span>
+
+	</section>
+
+ 	<h1 id="intro">Introduction</h1>
+
+	<p>
+		This document is an example of the usage of html/css/javascript for
+		printed documents. It also contains some reusable javascript code (for chapter
+		numbering and table of contents) and css style.
+	</p>
+	<p>
+		I found this to be more simple and powerful then latex, but it lacks some
+		features, like pages header and footer and pages numbering. These are
+		defined in the W3C Working Draft <a href="#bib1"></a> but not implemented in
+		any	browser yet.
+	</p>
+	<p>
+		I wrote some javascript code to calculate in which page an element is, a
+		chapter numbering and referencing system and a table of contents generator
+		combining the former and the latter. I only tested it on the last version of
+		Firefox, so i don't know how it works in other browsers. Anyway this code is
+		NOT suitable for production use but it's just an experiment.
+	</p>
+
+	<h2 id="advantages">Advantages</h2>
+
+	<ul style="text-align:left">
+		<li>Quite simple and clean syntax</li>
+		<li>
+			Great variety of libraries available: formulas editing (<a href="">
+			ASCIIMathML</a>, ...), charts (...), code highlight...
+		</li>
+		<li>
+			Possibility to use custom javascript and css to create complex libraries
+			and styles
+		</li>
+	</ul>
+
+	<h2 id="disadvantages">Disadvantages</h2>
+
+	<ul style="text-align:left">
+		<li>Not mature</li>
+		<li>
+			Missing features: multi-columns page format, page headers and footers,
+			...
+		</li>
+	</ul>
+
+	<h1 id="download">Download</h1>
+
+	<p>
+		The files of version <span class="ver"></span> can be downloaded at the
+		following link:
+		<a href="https://github.com/marcoscarpetta/printed-html-example/releases/%ver%">
+			https://github.com/marcoscarpetta/printed-html-example/releases/<span class="ver"></span>
+		</a>.
+	</p>
+
+	<h1 id="usage">Usage</h1>
+
+	<p>
+		In order to use this library you have to accomplish the following steps.
+	</p>
+
+	<h2 id="include">Incude javascript and css</h2>
+
+	<p>
+		Simply add:<br>
+		<pre>
+			<code class="html">
+&lt;script type="text/javascript" src="printed.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" type="text/css" href="printed.css"&gt;
+			</code>
+		</pre>
+		to the head tag of your document.
+	</p>
+
+	<p>
+		To run the script on page load insert this inside the haed tag:
+		<pre>
+			<code class="html">
+&lt;script&gt;printedHtml.initOnLoad();&lt;/script&gt;
+			</code>
+		</pre>
+
+		You can also run it when you want by calling:
+		<pre>
+			<code class="javascript">
+printedHtml.init();
+			</code>
+		</pre>
+	</p>
+
+	<h2 id="structure">Create structure.json file</h2>
+	<p>
+		A <i>structure.json</i> file is required to define the hierarchical
+		structure of the document needed for numbering chapters, figures,
+		bibliography's entries and any other thing that you would like to number.
+		This file should look like that in <a href="#structure_json"></a>.<br>
+
+		The main object contains a number of properties which represent the levels
+		of the document structure: each property's name is the level name and the
+		property value is an object that must contains the following properties:
+		<ul>
+			<li>
+				<i>selector</i>: a string containing a css selector to identify the
+				elements of a level.<br>
+				If <b>null</b> or <b>undefined</b> the elements of the class named like
+				the level will be selected.<br>
+				The numbering will be added before each element's content or before its
+				caption's content.
+			</li>
+			<li>
+				<i>captionSelector</i>: a string containing a css selector to identify a
+				different element where to write numbering (a caption element). An
+				example is the <i>"figure"</i> level, where the numbering will be added
+				to elements with class <i>caption</i>, children of elements with class
+				<i>figure</i>:
+				<pre>
+					<code class="html">
+&lt;div class="figure" id="fig0"&gt;
+ 	&lt;img src="example.png"&gt;
+	&lt;span class="caption"&gt;&lt;/span&gt;
+&lt;/div&gt;
+					</code>
+				</pre>
+				This property must start with <b>">"</b>, <b>" "</b>, <b>"+"</b> to select, respectively, a
+				child, a contained element or the next element of level's elements.<br>
+				If <b>null</b> or <b>undefined</b> the numbering will be directly added
+				to level's elements.
+			</li>
+			<li>
+				<i>type</i>: numeration type. Must be <i>"123"</i>, <i>"abc"</i>, <i>"ABC"</i> or <i>"III"</i>.<br>
+				<i>"123"</i> is the default value.
+			</li>
+			<li>
+				<i>text</i>: the text to be prepended to the content of the tag. <i>%level%</i> will be
+				replaced by the correct number of the level <i>"level"</i>.<br>
+				<i>%:%</i> will be replaced by <i>": "</i> if the element contains
+				something, or by an empty string if the element doesn't contains
+				anything.
+			</li>
+			<li>
+				<i id="level_ref">ref</i>: the text displayed in references to elements
+				of this level.<br>
+				Same substitutions as before.
+			</li>
+			<li>
+				<i id="level_toc">toc</i>: <b>true</b> if the elements of this level
+				must be incuded in the table of contents.
+			</li>
+			<li>
+				<i>children</i>: an array containing the names of the children levels of
+				this level (can be empty).
+			</li>
+		</ul>
+	</p>
+
+	<h2 id="references">References</h2>
+
+	<p>
+		To reference an element of a level simply add an <b>a</b> tag pointing to
+		its id:
+		<pre>
+			<code class="html">
+&lt;a href="#example"&gt;&lt;/a&gt;
+			</code>
+		</pre>
+
+		The <b>a</b> tag will be filled with a text according to the
+		<a href="#level_ref"><i>level.ref</i></a> preperty.
+	</p>
+
+	<h2 id="tocontents">Table of Contents</h2>
+
+	<p>
+		A table of contents can be inserted by placing an element with <b>id="toc"</b>,
+		like this:
+		<pre>
+			<code class="html">
+&lt;div id="toc"&gt;&lt;/div&gt;
+			</code>
+		</pre>
+
+		It will be filled with the content of the elements that belong to levels with
+		the <a href="#level_toc"><i>level.toc</i></a> property set to <b>true</b> or
+		with the content of their captions. Each entry of the table of contents will
+		be followed by its page number, calculated through javascript (it may be
+		wrong in some cases).
+	</p>
+
+	<p>
+		Each level of the table of contents can be styled through css using the
+		class <i>levelNameToc</i>. For example <i>chapter</i>'s class will be
+		<i>chapterToc</i>.
+	</p>
+
+	<h2 id="complete_example">Complete example</h2>
+
+	<p>
+		A complete example document using all of what was described above should
+		contain the following files:
+		<ul style="list-style-type: none">
+			<li>example/</li>
+			<li>
+				<ul style="list-style-type: '└ '">
+					<li>example.html (<a href="#example_html"></a>)</li>
+					<li>structure.json (<a href="#structure_json"></a>)</li>
+					<li>printed.js</li>
+					<li>printed.css</li>
+				</ul>
+			</li>
+		</ul>
+	</p>
+
+	<h1 id="firefox">Print in Firefox</h1>
+
+	<p>
+		I used Firefox to print my documents because is my daily browser.
+	</p>
+
+	<h2 id="about_config">Edit about:config properties</h2>
+
+	<p>
+		To cerrectly print the document you need to edit some properties in
+		about:config. The following settings referes to the A4 format for pages with
+		page numbers in the center of footer.
+
+		<pre>
+			<code>
+print.print_footercenter=&amp;P
+print.print_footerleft=
+print.print_footerright=
+print.print_headerleft=
+print.print_headerright=
+print.print_scaling=1,00
+print.print_unwriteable_margin_bottom=65
+print.print_unwriteable_margin_left=65
+print.print_unwriteable_margin_right=65
+print.print_unwriteable_margin_top=
+			</code>
+		</pre>
+	</p>
+
+	<h2 id="print">Print to pdf</h2>
+
+	<h1 id="issues">Known issues (Firefox related)</h1>
+
+	<p>
+		<ul>
+			<li>
+				<code>page-break-after: avoid;</code> doesn't work;
+			</li>
+			<li>
+				There is a void space before spacing points in table of contents entries
+				(the font used in pdf is diffirent from the one used in browser);
+			</li>
+			<li>
+				Links are not exported to pdf.
+			</li>
+		</ul>
+	</p>
+
+	<h1 id="example_files">Example files</h1>
+
+	<h2 id="example_html">example.html</h2>
+
+	<pre>
+		<code class="html" id="example_html_code">
+		</code>
+	</pre>
+
+	<h2 id="structure_json">structure.json</h2>
+
+	<pre>
+		<code class="json" id="structure_json_code">
+
+		</code>
+	</pre>
+
+	<h1 id="bib">Bibliography</h1>
+
+	<p>
+		<span class="bibEntry" id="bib1">
+			<a href="http://www.w3.org/TR/css3-page/">http://www.w3.org/TR/css3-page/</a>
+		</span>
+	</p>
+
+</body>
+</html>

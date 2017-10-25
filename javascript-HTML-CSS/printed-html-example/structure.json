@@ -1,0 +1,61 @@
+{
+  "chapter": {
+    "selector": "h1",
+    "captionSelector": null,
+    "type": "123",
+    "text": "%chapter% ",
+    "ref": "Chapter %chapter%",
+    "toc": true,
+    "children": ["section", "figure"]
+  },
+
+  "section": {
+    "selector": "h2",
+    "captionSelector": null,
+    "type": "123",
+    "text": "%chapter%.%section% ",
+    "ref": "Section %chapter%.%section%",
+    "toc": true,
+    "children": ["subsection"]
+  },
+
+  "subsection": {
+    "selector": "h3",
+    "captionSelector": null,
+    "type": "123",
+    "text": "%chapter%.%section%.%subsection% ",
+    "ref": "Subsection %chapter%.%section%.%subsection%",
+    "toc": true,
+    "children": []
+  },
+
+  "figure": {
+    "selector": ".figure",
+    "captionSelector": "> .caption",
+    "type": "123",
+    "text": "Figure %chapter%.%figure%%:%",
+    "ref": "Fig. %chapter%.%figure%",
+    "toc": false,
+    "children": ["subfigure"]
+  },
+
+  "subfigure": {
+    "selector": ".subfigure",
+    "captionSelector": "> .caption",
+    "type": "abc",
+    "text": "%subfigure%) ",
+    "ref": "Fig. %chapter%.%figure%%subfigure%",
+    "toc": false,
+    "children": []
+  },
+
+  "bibEntry": {
+    "selector": null,
+    "captionSelector": null,
+    "type": "123",
+    "text": "[%bibEntry%] ",
+    "ref": "[%bibEntry%]",
+    "toc": false,
+    "children": []
+  }
+}

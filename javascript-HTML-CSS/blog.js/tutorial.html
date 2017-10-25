@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<head>
+<title>Tutorial</title>
+<meta charset="utf-8"/>
+</head>
+<body>
+<header>
+<h1>Tutorial</h1>
+</header>
+<p>
+Follow the four simple passes belowe.
+</p>
+<h3>1. Get blog.js</h3>
+<p>
+Download the <a href="https://github.com/marcoscarpetta/blog.js/blob/gh-pages/blog.js">
+blog.js</a> and <a href="https://github.com/marcoscarpetta/blog.js/blob/gh-pages/blog_generator.js">
+blog_generator.js</a> files from the <a href="https://github.com/marcoscarpetta/blog.js">
+github repository</a>.
+</p>
+<h3>2. Include blog.js in your page</h3>
+<p>
+Include blog.js and blog_generator.js files in the page where you want to load 
+the blog:
+<pre>
+&lt;script type="text/javascript" src="blog.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="blog_generator.js"&gt;&lt;/script&gt;
+</pre>
+You also have to create an element with id="blog.js" where you want to show the
+blog:
+<pre>
+&lt;div id="blog.js"&gt;&lt;/div&gt;
+</pre>
+</p>
+<h3>3. Create the posts database</h3>
+<p>
+Create a json file like <a href="https://github.com/marcoscarpetta/blog.js/blob/gh-pages/db.json">
+this one</a> and an html file for each post.
+</p>
+<h3>4. Edit settings</h3>
+<p>
+Edit <a href="https://github.com/marcoscarpetta/blog.js/blob/gh-pages/blog_generator.js">
+blog_generator.js</a> file following comments.
+</p>
+<h3>Notes</h3>
+<p>
+Each path (json file, html files, images in posts...) can be relative to page where
+the blog have to be loaded or absolute.
+</p>
+</body>
+</html>

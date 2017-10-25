@@ -1,0 +1,28 @@
+@charset "UTF-8";
+/* CSS Document */
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.post {
+    margin: 20px 20px;
+}
+
+.author_date {
+    background-color: #CEE6EE;
+    display: inline-block;
+}
+
+.date {
+	color: #1E90FF;
+}
+
+.tags {
+    background-color: #ACFAFF;
+    display: inline-block;
+}
+
+.next_posts {
+    float: right;
+}

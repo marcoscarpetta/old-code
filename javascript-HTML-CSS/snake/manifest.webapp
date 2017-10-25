@@ -1,0 +1,19 @@
+{
+  "name": "Snake",
+  "description": "A classic snake game",
+  "launch_path": "/index.html",
+  "icons": {
+    "30": "/data/icon-30.png",
+    "60": "/data/icon-60.png",
+    "90": "/data/icon-90.png",
+    "128": "/data/icon-128.png"
+  },
+  "orientation": ["portrait"],
+  "fullscreen": "true",
+  "developer": {
+    "name": "Marco Scarpetta",
+    "url": "http://marcoscarpetta.github.io/"
+  },
+  "default_locale": "en",
+  "version": "1.0"
+}

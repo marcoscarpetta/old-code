@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: blog.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: blog.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>﻿/*  
+ *	@licstart  The following is the entire license notice for the 
+ *    JavaScript code in this page.
+ *    
+ *    Copyright (C) 2013  Marco Scarpetta
+ * 
+ *    The JavaScript code in this page is free software: you can
+ *    redistribute it and/or modify it under the terms of the GNU
+ *    General Public License (GNU GPL) as published by the Free Software
+ *    Foundation, either version 3 of the License, or (at your option)
+ *    any later version.  The code is distributed WITHOUT ANY WARRANTY;
+ *    without even the implied warranty of MERCHANTABILITY or FITNESS
+ *    FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+ * 
+ *    As additional permission under GNU GPL version 3 section 7, you
+ *    may distribute non-source (e.g., minimized or compacted) forms of
+ *    that code without the copy of the GNU GPL normally required by
+ *    section 4, provided you include this license notice and a URL
+ *    through which recipients can access the Corresponding Source.
+ *	
+ *    @licend  The above is the entire license notice
+ *    for the JavaScript code in this page.
+ */
+
+
+/**
+ * Parses the current URL.
+ * @return {Object} An Object representing the Url
+ */
+function parseUrl() {
+  if (document.URL.contains('?')) {
+    obj = new Object();
+    var pars = document.URL.split('?')[1];
+    var vars = pars.split('&');
+    for (var i = 0; i &lt; vars.length; i++) {
+      var pair = vars[i].split('=');
+      obj[decodeURIComponent(pair[0])] = 
+      decodeURIComponent(pair[1]);
+    }
+    return obj;
+  }
+  return null;
+}
+
+/**
+ * Returns the Url representing the given Object.
+ * &lt;p>
+ * Example: &lt;br>
+ * {'view': 'tag', 'tag': 'test'} --> '?view=tag&tag=test'
+ * &lt;/p>
+ * @param {Object} pars An object representing the Url
+ * @return {String} A string representing the given Url
+ */
+function getUrl(pars) {
+  url = '?';
+  for (var key in pars) {
+    url += encodeURIComponent(key)+'=';
+    url += encodeURIComponent(pars[key])+'&';
+  }
+  return url.slice(0,url.length-1);
+}
+
+/**
+ * Loads a file synchronously
+ * @param {String} path_to_file The path of the file
+ * @return {String} The loaded file
+ */
+function loadFile(path_to_file) {  
+  if (window.XMLHttpRequest){xmlhttp=new XMLHttpRequest();}
+  else {xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");}
+  
+  xmlhttp.overrideMimeType('text/plain');
+  xmlhttp.open("GET", path_to_file, false);
+  xmlhttp.send();
+  return xmlhttp.responseText;
+}
+
+/**
+ * Creates an instance of Post
+ * @constructor
+ * @param {Object} post_object The post object (same format of the json
+ * file)
+ */
+function Post(post_object) {
+  this.id = post_object.id;
+  this.date = new Date(post_object.date);
+  this.title = post_object.title;
+  this.author = post_object.author;
+  this.tags = post_object.tags;
+  this.body = loadFile(post_object.body_path);
+}
+
+/**
+ * Returns the post's date. Can be overridden
+ * @return {String} The post's date
+ */
+Post.prototype.getDate = function() {
+  return this.date.toLocaleString()
+}
+
+/**
+ * Returns the post's body
+ * @param {Number} max_length The maximum post's length. If negative,
+ * returns the full body
+ * @return {String} The post's body
+ */
+Post.prototype.getBody = function(max_length) {
+  if (max_length>0 && this.body.length > max_length) {
+    //FIXME Should check tags
+    return this.body.slice(0, max_length)+'...';
+  }
+  return this.body;
+}
+
+/**
+ * Creates an instance of Blog
+ * @constructor
+ * @param {String} path_to_json The path to the json file
+ */
+function Blog (path_to_json) {
+  //maximum preview length
+  this.max_preview_length = 20;
+  //posts per page in list views
+  this.posts_per_page = 5;
+  this.db = JSON.parse(loadFile(path_to_json));
+}
+
+/**
+ * Sorts the Blog database
+ * @param {String} field The field by which order
+ * @param {Boolean} ascending Orders ascending if true
+ */
+Blog.prototype.sort = function(field, ascending) {
+  for (var i=0; i&lt;this.db.length-1; i++) {
+    var min_max = i;
+    for (var j=i; j&lt;this.db.length; j++) {
+      if ((this.db[j][field] &lt; this.db[min_max][field])
+	== ascending) {
+	min_max = j;
+	}
+    }
+    if (min_max != i) {
+      var tmp = this.db[i];
+      this.db[i] = this.db[min_max];
+      this.db[min_max] = tmp;
+    }
+  }
+}
+
+/**
+ * Returns a list of objects corresponding to the query
+ * &lt;p>
+ * Supported filters:&lt;br>
+ * &lt;ul>
+ * &lt;li>equal (Any type)&lt;/li>
+ * &lt;li>contains (String and Array)&lt;/li>
+ * &lt;/ul>&lt;br>
+ * Examples:&lt;br>
+ * blog.query({'field': 'id', 'equal': 0});&lt;br>
+ * blog.query({'field': 'tags', 'contains': 'test'});
+ * &lt;/p>
+ * @param {Object} query An Object representing the query
+ * @return {Array} An Array of Objects correspondig to the query. Can be
+ * void.
+ */
+Blog.prototype.query = function(query) {
+  var list = [];
+  if (query.equal) {
+    for (var i in this.db) {
+      if (this.db[i][query.field] == query.equal) {
+	list.push(this.db[i]);
+      }
+    }
+  }
+  else if (query.contains) {
+    for (var i in this.db) {
+      if (this.db[i][query.field].contains) {
+	if (this.db[i][query.field].contains(query.contains)) {
+	  list.push(this.db[i]);
+	}
+      }
+      else if (this.db[i][query.field].indexOf) {
+	if (this.db[i][query.field].indexOf(query.contains)>=0)
+	{
+	  list.push(this.db[i]);
+	}
+      }
+    }
+  }
+  return list;
+}
+
+/**
+ * Returns a Post object of the post with the given id
+ * @param {Number} id The post's id
+ * @return {Post} The post with the given id or null if it doesn't 
+ * exists
+ */
+Blog.prototype.getPost = function(id) {
+  for (var i=0; i&lt;this.db.length; i++) {
+    if (id == this.db[i].id) {
+      return new Post(this.db[i]);
+    }
+  }
+  return null;
+}
+
+/**
+ * Returns a representation of the post
+ * @param {Post} post The post to render
+ * @param {Boolean} preview Render the post as preview if true
+ * @return {HTMLElement} The post
+ */
+Blog.prototype.getPostView = function(post, preview) {
+  var article = document.createElement('article'); //article tag
+  article.className = 'post';
+  var header = document.createElement('header'); //post's haeder tag
+  var title = document.createElement('h1'); //post title
+  title.className = 'post_title';
+  title.title = post.title;
+  title.appendChild(document.createTextNode(post.title));
+  var aut_date = document.createElement('p'); //author and date
+  aut_date.className = 'author_date';
+  aut_date.appendChild(document.createTextNode('Written by '));
+  var author = document.createElement('a'); //author
+  author.className = 'author';
+  author.href = getUrl({'view': 'author',
+    'author': post.author, 'page': 0});
+  author.appendChild(document.createTextNode(post.author));
+  aut_date.appendChild(author);
+  aut_date.appendChild(document.createTextNode(' on '));
+  var date = document.createElement('span'); //date
+  date.className = 'date';
+  date.appendChild(document.createTextNode(post.getDate()));
+  aut_date.appendChild(date);
+  var tags = document.createElement('div'); //tags
+  tags.className = 'tags';
+  for (var i in post.tags) {
+    var a = document.createElement('a');
+    a.appendChild(document.createTextNode(post.tags[i]));
+    a.href = getUrl({'view': 'tag', 'tag': post.tags[i],
+      'page': 0});
+    a.title = 'Tag: '+post.tags[i];
+    a.className = 'tag';
+    tags.appendChild(a);
+    tags.appendChild(document.createTextNode(' '));
+  }
+  
+  
+  //If `preview` is `true`, the title is a link to the post view
+  if (preview) {
+    a = document.createElement('a');
+    a.class_name = 'post_title_link';
+    a.href = getUrl({'view': 'post', 'id': post.id});
+    a.appendChild(title);
+    header.appendChild(a);
+  }
+  else {
+    header.appendChild(title);
+  }
+  
+  article.appendChild(header);
+  article.appendChild(aut_date);
+  article.appendChild(document.createElement('br'));
+  article.appendChild(tags);
+  
+  article.innerHTML += post.getBody(preview ? 
+  this.max_preview_length : -1);
+  
+  return article;
+}
+
+/**
+ * Returns a representation of the list of posts
+ * @param {Array} list The list of posts to render
+ * @param {Object} pars The url's parameters
+ * @return {HTMLElement} The list of posts
+ */
+Blog.prototype.getListView = function(list, pars) {
+  var first = pars.page*this.posts_per_page;
+  var posts = list.slice(first, first+this.posts_per_page+1);
+  var div = document.createElement('div');
+  var last = (posts.length>this.posts_per_page) ?
+  posts.length-1 : posts.length;
+  for (var i=0; i&lt;last; i++) {
+    var post = new Post(posts[i]);
+    div.appendChild(this.getPostView(post, true));
+  }
+  
+  if (pars.page>0) {
+    var a = document.createElement('a');
+    a.className = 'next_posts';
+    pars.page -=  1;
+    a.href=getUrl(pars);
+    a.appendChild(document.createTextNode('Next posts'));
+    pars.page += 1;
+    div.appendChild(a);
+  }
+  if (posts.length>this.posts_per_page) {
+    var a = document.createElement('a');
+    a.className = 'prev_posts';
+    pars.page +=  1;
+    a.href=getUrl(pars);
+    a.appendChild(document.createTextNode('Previous posts'));
+    div.appendChild(a);
+  }
+  return div;
+}
+
+/**
+ * Returns the admin view of the blog
+ * @return {HTMLElement} The view
+ */
+Blog.prototype.getAdminView = function() {
+  var newWithContent = function(type, content) {
+    var td = document.createElement(type);
+    td.appendChild(document.createTextNode(content));
+    return td;
+  }
+  var newA = function(href, content) {
+    var a = document.createElement("a");
+    a.href = href;
+    a.appendChild(document.createTextNode(content));
+    return a;
+  }
+  var table = document.createElement('table');
+  table.border = "2px"
+  var first_row = document.createElement('tr');
+  first_row.appendChild(newWithContent('th', 'id'));
+  first_row.appendChild(newWithContent('th', 'title'));
+  first_row.appendChild(newWithContent('th', 'date'));
+  table.appendChild(first_row);
+  for (var i=0; i&lt;this.db.length; i++) {
+    var row = document.createElement("tr");
+    row.appendChild(newWithContent("td", this.db[i].id));
+    row.appendChild(newWithContent("td", this.db[i].title));
+    row.appendChild(newWithContent("td", this.db[i].date));
+    row.appendChild(newA("#", "Edit"));
+    row.appendChild(newA("#", "Delete"));
+    table.appendChild(row);
+  }
+  
+  var a = document.createElement('a');
+  var json = JSON.stringify(this.db, null, "    ");
+  var blob = new Blob([json], {type: "application/json"});
+  var url  = URL.createObjectURL(blob);
+  a.download    = "db.json";
+  a.href        = url;
+  a.textContent = "Download db.json";
+  table.appendChild(a);
+  return table;
+}
+
+/**
+ * Returns a representation of the view
+ * @param {Object} pars The url's parameters
+ * @return {HTMLElement} The view
+ */
+Blog.prototype.getView = function(pars) {
+  if (pars == null) {
+    var posts = this.query({'field': 'list',
+      'equal': true});
+    pars = {'view': 'home', 'page': 0}
+    return this.getListView(posts, pars)
+  }
+  if (pars.view == 'home') {
+    var posts = this.query({'field': 'list',
+      'equal': true});
+    return this.getListView(posts, pars);
+  }
+  if (pars.view == 'author') {
+    var posts = this.query({'field': 'author',
+      'equal': pars.author});
+    var div = this.getListView(posts, pars);
+    text = document.createTextNode('Posts from: '+pars.author);
+    div.insertBefore(text, div.firstChild);
+    return div;
+  }
+  if (pars.view == 'tag') {
+    var posts = this.query({'field': 'tags',
+      'contains': pars.tag});
+    var div = this.getListView(posts, pars);
+    text = document.createTextNode('Tag: '+pars.tag);
+    div.insertBefore(text, div.firstChild);
+    return div;
+  }
+  if (pars.view == "post") {
+    var post = this.getPost(parseInt(pars.id));
+    return this.getPostView(post, false);
+  }
+  if (pars.view == "admin") {
+    return this.getAdminView();
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Blog.html">Blog</a></li><li><a href="Post.html">Post</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getUrl">getUrl</a></li><li><a href="global.html#loadFile">loadFile</a></li><li><a href="global.html#parseUrl">parseUrl</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Feb 19 2014 18:31:58 GMT+0100 (CET)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

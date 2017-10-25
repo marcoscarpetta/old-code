@@ -1,0 +1,65 @@
+{
+  "version": "1.0.0",
+  "posts": [
+    {
+      "id": 1,
+      "date": "2014-12-01T12:15:46.860Z",
+      "edit_date": "2013-12-01T12:15:46.860Z",
+      "author": "Marco",
+      "title": "Test 1",
+      "tags": ["test"],
+      "body_path": "posts/0.html",
+      "list": true
+    },
+    {
+        "id": 4,
+        "date": "2013-12-04T12:15:46.860Z",
+        "edit_date": "2013-12-04T12:15:46.860Z",
+        "author": "blog.js",
+        "title": "Test 4",
+        "tags": ["test"],
+        "body_path": "posts/0.html",
+        "list": false
+    },
+    {
+        "id": 7,
+        "date": "2013-12-07T12:15:46.860Z",
+        "edit_date": "2013-12-07T12:15:46.860Z",
+        "author": "Marco",
+        "title": "Test 7",
+        "tags": ["test"],
+        "body_path": "posts/0.html",
+        "list": true
+    },
+    {
+        "id": 5,
+        "date": "2013-12-05T12:15:46.860Z",
+        "edit_date": "2013-12-05T12:15:46.860Z",
+        "author": "Marco",
+        "title": "Test 5",
+        "tags": ["test"],
+        "body_path": "posts/0.html",
+        "list": true
+    },
+    {
+        "id": 8,
+        "date": "2013-12-08T12:15:46.860Z",
+        "edit_date": "2013-12-08T12:15:46.860Z",
+        "author": "blog.js",
+        "title": "Test 8",
+        "tags": ["test", "testPost"],
+        "body_path": "posts/0.html",
+        "list": true
+    },
+    {
+        "id": 3,
+        "date": "2013-12-03T12:15:46.860Z",
+        "edit_date": "2013-12-03T12:15:46.860Z",
+        "author": "Marco",
+        "title": "Test 3",
+        "tags": ["test"],
+        "body_path": "posts/0.html",
+        "list": true
+    }
+  ]
+}

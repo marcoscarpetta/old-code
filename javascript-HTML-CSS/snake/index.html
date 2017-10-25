@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Snake</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no" />
+  <!-- Building blocks -->
+  <!-- link rel="stylesheet" href="style/action_menu.css" -->
+  <link rel="stylesheet" href="style/buttons.css">
+  <!-- link rel="stylesheet" href="style/confirm.css" -->
+  <!-- link rel="stylesheet" href="style/edit_mode.css" -->
+  <link rel="stylesheet" href="style/headers.css">
+  <link rel="stylesheet" href="style/input_areas.css">
+  <!-- link rel="stylesheet" href="style/status.css" -->
+  <!-- link rel="stylesheet" href="style/switches.css" -->
+  <!-- link rel="stylesheet" href="style/drawer.css" -->
+  <link rel="stylesheet" href="style/lists.css">
+  <!-- link rel="stylesheet" href="style/progress_activity.css" -->
+  <!-- link rel="stylesheet" href="style/scrolling.css" -->
+  <!-- link rel="stylesheet" href="style/seekbars.css" -->
+  <!-- link rel="stylesheet" href="style/tabs.css" -->
+  <!-- link rel="stylesheet" href="style/toolbars.css" -->
+
+  <!-- Icons -->
+  <!-- link rel="stylesheet" href="icons/styles/action_icons.css" -->
+  <!-- link rel="stylesheet" href="icons/styles/media_icons.css" -->
+  <!-- link rel="stylesheet" href="icons/styles/comms_icons.css" -->
+  <!-- link rel="stylesheet" href="icons/styles/settings_icons.css" -->
+
+  <!-- Transitions -->
+  <link rel="stylesheet" href="transitions.css">
+
+  <!-- Util CSS: some extra tricks -->
+  <link rel="stylesheet" href="util.css">
+	<style>
+		body {
+			 padding: 0 0;
+			 margin: 0 0;
+		}
+		img {
+			 vertical-align: middle;
+		}
+    #index {
+      height: 100%;
+    }
+    [data-position="right"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transform: translateX(100%);
+      -webkit-transform: translateX(100%);
+      z-index: 15;
+      z-index: 100; /* -> drawer */
+    }
+    section[role="region"][data-position="right"] {
+      position: absolute;
+    }
+    [data-position="right"].current {
+      animation: rightToCurrent 0.4s forwards;
+      -webkit-animation: rightToCurrent 0.4s forwards;
+    }
+    [data-position="right"].right {
+      animation: currentToRight 0.4s forwards;
+      -webkit-animation: currentToRight 0.4s forwards;
+    }
+    [data-position="current"].left {
+      animation: currentToLeft 0.4s forwards;
+      -webkit-animation: currentToLeft 0.4s forwards;
+    }
+    [data-position="current"].current {
+      animation: leftToCurrent 0.4s forwards;
+      -webkit-animation: leftToCurrent 0.4s forwards;
+    }
+    [data-position="right"].leftToCurrent {
+	animation: leftToCurrent 0.4s forwards;
+}
+
+[data-position="right"].currentToLeft {
+	animation: currentToLeft 0.4s forwards;
+}
+    [data-position="back"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      opacity: 0;
+      /* z-index: 100; -> drawer */
+    }
+    [data-position="back"].fade-in {
+      z-index: 120;
+      animation: fadeIn 0.2s forwards;
+      -webkit-animation: fadeIn 0.2s forwards;
+    }
+    [data-position="back"].fade-out {
+      animation: fadeOut 0.2s forwards;
+      -webkit-animation: fadeOut 0.2s forwards;
+    }
+
+  </style>
+</head>
+<body>
+    <img src="data/loading.png" style="display:none;" id="loading"></img>
+   <section id="index" role="region" data-position="current">
+      <header class="fixed">
+        <h1>Snake</h1>
+      </header>
+      <article class="scrollable header">
+        <div data-type="list">
+          <ul>
+            <li>
+              <a id="btn-survival" href="#">
+                <p>Survival mode</p>
+              </a>
+            </li>
+            <li>
+              <a id="btn-levels" href="#">
+                <p>Levels mode</p>
+              </a>
+            </li>
+            <li>
+              <a id="btn-settings" href="#">
+                <p>Settings</p>
+              </a>
+            </li>
+            <li>
+              <a id="btn-high-scores" href="#">
+                <p>High scores</p>
+              </a>
+            </li>
+            <li>
+              <a id="btn-help" href="#">
+                <p>Help</p>
+              </a>
+            </li>
+            <li>
+              <a id="btn-about" href="#">
+                <p>About</p>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </article>
+    </section>
+  
+	<section role="region" id="game" data-position="right">
+		<canvas id="gameCanvas"></canvas>
+		<div id="commands" style="vertical-align:top;margin:0 0;padding:0 0;text-align:center;">
+			<img src="data/play.png" id="btn-play" style="float:left"></img>
+			<img src="data/x.png" id="btn-paused-back-to-menu" style="float:right"></img>
+			<img src="data/arrow-right.png" id="btn-a" style="float:left"></img>
+			<img src="data/arrow-left.png" id="btn-b" style="float:right"></img>
+				<div>Points:</div>
+				<div id="points"></div>
+		</div>
+	</section>
+	
+	<section role="region" id="select-level" data-position="right">
+		<header class="fixed">
+			<a id="btn-select-level-back" href="#"><span class="icon icon-back">back</span></a>
+			<h1>Select level</h1>
+		</header>
+		<article class="scrollable header">
+			<div data-type="list">
+				<ul id="levels-list">
+				</ul>
+			</div>
+		</article>
+	</section>
+
+	<section role="region" id="game-over" data-position="right">
+		<header class="fixed">
+			<h1 id="game-over-h1">Game over</h1>
+			<h1 id="level-cleared-h1">Level cleared</h1>
+		</header>
+		<article class="content scrollable header">
+		<form id="game-over-form">
+			<p>
+				<input type="text" placeholder="Name" required id="high-scores-name">
+				<button type="reset" id="high-scores-name-reset">Clear</button>
+			</p>
+		</form>
+		<button id="btn-gameover-save-score" class="recommend">Save score</button>
+		<button id="btn-gameover-next-level" class="recommend">Next level</button>
+		<button id="btn-gameover-try-again" class="recommend">Try again</button>
+		<button id="btn-back-to-menu">Back to menu</button>
+		</article>
+	</section>
+	
+	<section role="region" id="settings" data-position="right">
+		<header class="fixed">
+			<a id="btn-settings-back" href="#"><span class="icon icon-back">back</span></a>
+			<h1>Settings</h1>
+		</header>
+		<article class="scrollable header">
+		<p>Speed:</p>
+				    <select name="speed" id="speed">
+				      <option value="1">1</option>
+				      <option value="2">2</option>
+				      <option value="3">3</option>
+				      <option value="4">4</option>
+				      <option value="5">5</option>
+				    </select>
+		</article>
+	</section>
+	
+	<section role="region" id="high-scores" data-position="right">
+		<header class="fixed">
+			<a id="btn-high-scores-back" href="#"><span class="icon icon-back">back</span></a>
+			<h1>High scores</h1>
+		</header>
+		<article class="scrollable header">
+			<div data-type="list">
+				<ul id="high-scores-list">
+				</ul>
+			</div>
+		</article>
+	</section>
+	
+	<section role="region" id="help" data-position="right">
+		<header class="fixed">
+			<a id="btn-help-back" href="#"><span class="icon icon-back">back</span></a>
+			<h1>Help</h1>
+		</header>
+		<article class="content scrollable header">
+			<h1>Survival mode</h1>
+			<p>
+			Eat as fruits (<img src="data/fruit.png">) as you can.
+			</p>
+			<h1>Levels mode</h1>
+			<p>
+			Eat fruits (<img src="data/fruit.png">) until you see the key
+			(<img src="data/key.png">), pick up the key and open the door
+			(<img src="data/door.png">) to go to the next level.
+			</p>
+		</article>
+	</section>
+	
+	<section role="region" id="about" data-position="right">
+		<header class="fixed">
+			<a id="btn-about-back" href="#"><span class="icon icon-back">back</span></a>
+			<h1>About</h1>
+		</header>
+		<article class="content scrollable header">
+			<p>
+			Copyright (C) 2014  Marco Scarpetta<br><br>
+			This game is free software: you can
+			redistribute it and/or modify it under the terms of the GNU
+			General Public License (GNU GPL) as published by the Free Software
+			Foundation, either version 3 of the License, or (at your option)
+			any later version.  The code is distributed WITHOUT ANY WARRANTY;
+			without even the implied warranty of MERCHANTABILITY or FITNESS
+			FOR A PARTICULAR PURPOSE.  See the <a target='_blank' 
+			href="http://www.gnu.org/licenses/gpl-3.0.html">
+			GNU GPL</a> for more details.
+			</p>
+		</article>
+	</section>
+
+	<script type="text/javascript" src="levels.js"></script>
+	<script type="text/javascript" src="app.js"></script>
+</body>
+</html>

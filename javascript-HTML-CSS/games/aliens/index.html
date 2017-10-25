@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Aliens invade</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no" />
+  <!-- Building blocks -->
+  <!-- link rel="stylesheet" href="style/action_menu.css" -->
+  <link rel="stylesheet" href="style/buttons.css">
+  <!-- link rel="stylesheet" href="style/confirm.css" -->
+  <!-- link rel="stylesheet" href="style/edit_mode.css" -->
+  <link rel="stylesheet" href="style/headers.css">
+  <!-- link rel="stylesheet" href="style/input_areas.css" -->
+  <!-- link rel="stylesheet" href="style/status.css" -->
+  <!-- link rel="stylesheet" href="style/switches.css" -->
+  <!-- link rel="stylesheet" href="style/drawer.css" -->
+  <!-- link rel="stylesheet" href="style/lists.css" -->
+  <!-- link rel="stylesheet" href="style/progress_activity.css" -->
+  <!-- link rel="stylesheet" href="style/scrolling.css" -->
+  <!-- link rel="stylesheet" href="style/seekbars.css" -->
+  <!-- link rel="stylesheet" href="style/tabs.css" -->
+  <!-- link rel="stylesheet" href="style/toolbars.css" -->
+
+  <!-- Icons -->
+  <!-- link rel="stylesheet" href="icons/styles/action_icons.css" -->
+  <!-- link rel="stylesheet" href="icons/styles/media_icons.css" -->
+  <!-- link rel="stylesheet" href="icons/styles/comms_icons.css" -->
+  <!-- link rel="stylesheet" href="icons/styles/settings_icons.css" -->
+
+  <!-- Transitions -->
+  <link rel="stylesheet" href="transitions.css">
+
+  <!-- Util CSS: some extra tricks -->
+  <link rel="stylesheet" href="util.css">
+	<style>
+		body {
+			 padding: 0 0;
+			 margin: 0 0;
+		}
+		img {
+			 vertical-align: middle;
+		}
+    #index {
+      height: 100%;
+    }
+    [data-position="right"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transform: translateX(100%);
+      -webkit-transform: translateX(100%);
+      z-index: 15;
+      z-index: 100; /* -> drawer */
+    }
+    section[role="region"][data-position="right"] {
+      position: absolute;
+    }
+    [data-position="right"].current {
+      animation: rightToCurrent 0.4s forwards;
+      -webkit-animation: rightToCurrent 0.4s forwards;
+    }
+    [data-position="right"].right {
+      animation: currentToRight 0.4s forwards;
+      -webkit-animation: currentToRight 0.4s forwards;
+    }
+    [data-position="current"].left {
+      animation: currentToLeft 0.4s forwards;
+      -webkit-animation: currentToLeft 0.4s forwards;
+    }
+    [data-position="current"].current {
+      animation: leftToCurrent 0.4s forwards;
+      -webkit-animation: leftToCurrent 0.4s forwards;
+    }
+    [data-position="back"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      opacity: 0;
+      /* z-index: 100; -> drawer */
+    }
+    [data-position="back"].fade-in {
+      z-index: 120;
+      animation: fadeIn 0.2s forwards;
+      -webkit-animation: fadeIn 0.2s forwards;
+    }
+    [data-position="back"].fade-out {
+      animation: fadeOut 0.2s forwards;
+      -webkit-animation: fadeOut 0.2s forwards;
+    }
+
+    /* Active state */
+    .active {
+      background-color: #b2f2ff;
+      color: #fff;
+			
+    }
+		
+		#gifts_list li {
+			margin: 5px 0;
+		}
+    }
+
+  </style>
+</head>
+<body>
+
+	<section role="region" id="game" data-position="right">
+		<canvas id="gameCanvas"></canvas>
+	</section>
+
+	<section id="index" data-position="current">
+		<article class="content scrollable">
+			<div style="float:left">
+				<h1>Aliens invade</h1>
+				<h3 id="scored"></h3>
+				<h3 id="record"></h3>
+			</div>
+			<menu style="float:right" class="content">
+				<button class="recommend" id="btn-new-game">New game</button>
+				<button id="btn-help">Help</button>
+				<button id="btn-about">About</button>
+			</menu>
+		</article>
+	</section>
+
+	<section role="region" id="help" data-position="right">
+		<header class="fixed">
+			<a id="btn-help-back" href="#"><span class="icon icon-back">back</span></a>
+			<h1>Help</h1>
+		</header>
+		<article class="content scrollable header">
+			<p>
+				Not allow aliens to invade your planet, just 10 of them are enough 
+				to colonize it!
+			</p>
+			<p>
+				Tap the upper side of the screen (press the up key) to move the
+				rocket up and the lower side of the screen (the down key) to 
+				move the rocket down.
+			</p>
+			<p>
+				List of gifts:
+				<ul id="gifts_list">
+					<li><img src="data/care.png"> Increases your health to maximum</li>
+					<li><img src="data/life.png"> Gives you an extra life</li>
+					<li><img src="data/due.png"> Double/triple central shot</li>
+					<li><img src="data/tre.png"> Diagonal shot</li>
+					<li><img src="data/shield.png"> 10 seconds shield</li>
+				</ul>
+			</p>
+		</article>
+	</section>
+	
+	<section role="region" id="about" data-position="right">
+		<header class="fixed">
+			<a id="btn-about-back" href="#"><span class="icon icon-back">back</span></a>
+			<h1>About</h1>
+		</header>
+		<article class="content scrollable header">
+			<p>This game is powered by <a target='_blank' href=http://jawsjs.com/">
+			jaws.js</a>.<br><br>
+			Copyright (C) 2013  Marco Scarpetta<br><br>
+			This game is free software: you can
+			redistribute it and/or modify it under the terms of the GNU
+			General Public License (GNU GPL) as published by the Free Software
+			Foundation, either version 3 of the License, or (at your option)
+			any later version.  The code is distributed WITHOUT ANY WARRANTY;
+			without even the implied warranty of MERCHANTABILITY or FITNESS
+			FOR A PARTICULAR PURPOSE.  See the <a target='_blank' 
+			href="http://www.gnu.org/licenses/gpl-3.0.html">
+			GNU GPL</a> for more details.
+			</p>
+		</article>
+	</section>
+
+	<script type="text/javascript" src="http://jawsjs.com/jawsjs/jaws.js"></script>
+	<script type="text/javascript" src="https://raw.github.com/ippa/jaws/master/src/extras/sprite_list.js"></script>
+	<script type="text/javascript" src="app.js"></script>
+</body>
+</html>

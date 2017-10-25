@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="printed.css">
+	<script type="text/javascript" src="printed.js"></script>
+	<script>printedHtml.initOnLoad();</script>
+</head>
+
+<body>
+
+	<div id="toc">
+		<span style="font-size: 2em; margin: 1cm 0; display:block">
+			Table of Contents
+		</span>
+	</div>
+
+	<h1 id="c1">Test chapter</h1>
+
+	<p>
+		Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+		tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+		quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+		consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+		cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+		non	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+	</p>
+
+	<h2 id="sec1">Test section</h2>
+
+	<h3 id="subsec1"> Test subsection</h3>
+
+	<div class="figure">
+		<div class="subfigure" id="test_figure" style="display: inline-block">
+			<img src="img/test.png"><br>
+			<span class="caption">Subfigure a</span>
+		</div>
+		<div class="subfigure" style="display: inline-block">
+			<img src="img/test.png"><br>
+			<span class="caption">Subfigure b</span>
+		</div><br>
+		<span class="caption"></span>
+	</div>
+
+
+	<h1 id="c2">Second chapter</h1>
+
+	<p>
+		This is a reference to <a href="#test_figure"></a>.
+	</p>
+
+</body>
+</html>
