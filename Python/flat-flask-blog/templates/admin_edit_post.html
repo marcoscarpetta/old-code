@@ -1,0 +1,61 @@
+<!--
+    Copyright (C) 2017 Marco Scarpetta
+    
+    This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. To view a copy of this license,
+    visit http://creativecommons.org/licenses/by-sa/4.0/.
+-->
+
+{{#post}}
+<p>
+    <a href="{{admin_dashboard_url}}">Dashboard</a>
+</p>
+
+<p>
+    Use "&#123;&#123;post_static&#125;&#125;/file_name" to link static files of the post.
+</p>
+
+<form action="{{edit_post_url}}/{{id}}" method="post" enctype='multipart/form-data' encoding='multipart/form-data'>
+    <p><label for="title">Title:</label></p>
+    <input style="width: 80vw" type="text" id="title" name="title" value="{{title}}"/>
+    
+    <p><label for="tags">Tags:</label></p>
+    <input style="width: 80vw" type="text" id="tags" name="tags"
+    value="{{#tags}}{{.}}; {{/tags}}"/>
+    
+    <p><label for="body">Body:</label></p>
+    <textarea style="width: 80vw; height: 80vh" id="body" name="body">{{{edit_body}}}</textarea>
+    
+    <p>
+        <label for="list_post">
+            <input type="checkbox" id="list_post" name="list_post" {{#list_post}}checked{{/list_post}}/>
+            List post
+        </label>
+    </p>
+    
+    <p>
+        <label for="draft">
+            <input type="checkbox" id="draft" name="draft" {{#draft}}checked{{/draft}}/>
+            Draft
+        </label>
+    </p>
+    
+    <p>
+        <label for="allow_comments">
+            <input type="checkbox" id="allow_comments" name="allow_comments" {{#allow_comments}}checked{{/allow_comments}}/>
+            Allow comments
+        </label>
+    </p>
+    
+    {{#static_files}}
+    <p>{{.}} <a href="{{delete_post_static_url}}/{{id}}/{{.}}" class="button_red">Delete</a></p>
+    {{/static_files}}
+    
+    <p>
+        <input type="file" name="file">
+        <button type="submit" name="upload_file">Upload</button>
+    </p>
+    
+    <p><button type="submit" name="save_post" class="button_green">Save</button></p>
+</form>
+{{/post}}

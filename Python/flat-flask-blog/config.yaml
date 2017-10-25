@@ -1,0 +1,101 @@
+# flat-flask-blog configuration file
+
+#display options
+posts_per_page: 5
+atom_posts: 10
+date_format: "%Y-%m-%dT%H:%M:%SZ"
+display_date_format: "%B %d, %Y %H:%M UTC"
+
+# Environment variables
+# Prepend "env:" to use environment variables for root_dir and persistent_data_dir
+environment:
+    debug:
+        root_dir: "."
+        persistent_data_dir: "."
+        root_url: "http://localhost:5000/"
+        secure_root_url: "http://localhost:5000/"
+
+    # Insert the root_url of your website and optionally the secure_root_url
+    # secure_root_url is required to use OAuth 2.0 feautures
+    deployment:
+        root_dir: "env: OPENSHIFT_REPO_DIR"
+        persistent_data_dir: "env: OPENSHIFT_DATA_DIR"
+        root_url: ""
+        secure_root_url: ""
+
+# Paths (relative to persistent_data_dir)
+# These directories/files will be created if they don't exist
+posts_dir: "posts"
+users_dir: "users"
+usernames_file: "usernames.yaml"
+
+# Paths (relative to root_dir)
+# These directories/files must exist
+static_dir: "static"
+templates_dir: "templates"
+static_pages_dir: "static_pages"
+
+# URLs
+urls:
+    # "index_url/" will be prepended to all URLs
+    index_url: "/"
+
+    page_url: "page"
+    post_url: "article"
+    submit_comment_url: "submit_comment"
+    delete_comment_url: "delete_comment"
+    tag_url: "tag"
+    author_url: "author"
+    static_url: "static"
+    static_page_url: "static_page"
+    feed_url: "feed"
+    oauth2_login_url: "oauth2_login"
+    logout_url: "logout"
+    edit_profile_url: "edit_profile"
+    
+    # Register "secure_root_url/index_url/oauth2_redirect_url" as redirect uri
+    # on your service providers
+    oauth2_redirect_url: "oauth2callback"
+    
+    # "index_url/admin_url/" will be prepended to all the following URLs
+    admin_url: "admin"
+    
+    admin_dashboard_url: "dashboard"
+    new_post_url: "new_post"
+    edit_post_url: "edit"
+    delete_post_url: "delete"
+    delete_post_static_url: "delete_static_file"
+    toggle_block_user_url: "block"
+    toggle_hide_content_url: "hide_content"
+    backup_url: "backup"
+    restore_backup_url: "restore_backup"
+
+# Insert the user_id and OAuth 2.0 provider of the root user
+root_user_id: ""
+root_user_provider: ""
+
+# OAuth 2.0 service providers configuration parameters
+# Insert your client_id and client_secret for each provider
+oauth2_parameters:
+    google:
+        client_id: ""
+        client_secret: ""
+        auth_uri: "https://accounts.google.com/o/oauth2/v2/auth"
+        token_uri: "https://www.googleapis.com/oauth2/v4/token"
+        scopes: "email%20https://www.googleapis.com/auth/userinfo.profile"
+        profile_api_url: "https://www.googleapis.com/oauth2/v3/userinfo"
+        id: "sub"
+        name: "name"
+        email: "email"
+        picture_url: "picture"
+    github:
+        client_id: ""
+        client_secret: ""
+        auth_uri: "https://github.com/login/oauth/authorize"
+        token_uri: "https://github.com/login/oauth/access_token"
+        scopes: "user"
+        profile_api_url: "https://api.github.com/user"
+        id: "id"
+        name: "name"
+        email: "email"
+        picture_url: "avatar_url"

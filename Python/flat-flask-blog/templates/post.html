@@ -1,0 +1,117 @@
+<!--
+    Copyright (C) 2017 Marco Scarpetta
+    
+    This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. To view a copy of this license,
+    visit http://creativecommons.org/licenses/by-sa/4.0/.
+-->
+
+{{#post}}
+<article class="post">
+
+    <header>
+        <h1>{{title}}</h1>
+
+        <div class="post_infos">
+            <address>Author: <a href="{{author_url}}/{{author}}">{{author_name}}</a></address><!--
+            
+         --><date datetime="{{date}}">{{display_date}}</date><!--
+            
+         -->{{#edit_date}}<date datetime="{{edit_date}}" id="edit_date">
+                Last modified on: {{display_edit_date}}
+            </date>{{/edit_date}}
+        </div>
+        
+        <div id="tags">
+            {{#tags}}
+            <a href="{{tag_url}}/{{.}}">{{.}}</a>
+            {{/tags}}
+        </div>
+    </header>
+    
+    <div class="divider"></div>
+
+    {{{body}}}
+    
+</article>
+
+<div class="post_divider"></div>
+
+{{#allow_comments}}
+<h1>Comments</h1>
+
+{{#user}}        
+<p>Logged in as {{username}}.</p>
+<p>
+    <a href="{{edit_profile_url}}" class="button_green">Edit profile</a>
+    <a href="{{logout_url}}?redirect_url={{post_url}}/{{id}}" class="button_red">Logout</a>
+</p>
+    {{#blocked}}
+        <p>You have been blocked.</p>
+    {{/blocked}}
+    {{^blocked}}
+        <form action="{{submit_comment_url}}/{{id}}" method="post">
+            <p>Some HTML allowed:<p>
+            <p>
+                &lt;b&gt; <b>bold text</b> &lt;/b&gt;<br>
+                &lt;i&gt; <i>italic text</i> &lt;/i&gt;<br>
+                &lt;a href="http://example.com"&gt; <a href="http://example.com">link</a> &lt;/a&gt;<br>
+            </p>
+            
+            <p><label>Your comment:</label></p>
+            <textarea style="width: 80vw; height: 30vh" id="comment" name="comment"></textarea>
+            
+            <p><button type="submit">Post comment</button></p>
+        </form>
+    {{/blocked}}
+{{/user}}
+{{^user}}
+<p>
+You need to login to comment on this post.
+</p>
+<a href="{{oauth2_login_url}}/google?source_url={{post_url}}/{{id}}" class="button_blue">Login with Google</a>
+<a href="{{oauth2_login_url}}/github?source_url={{post_url}}/{{id}}" class="button_blue">Login with GitHub</a>
+{{/user}}
+
+{{#comments}}
+    {{#deleted}}
+        <p>This comment was deleted.</p>
+    {{/deleted}}
+    {{^deleted}}
+        {{#author}}
+            {{#hide_content}}
+                <p>The comments of this user have been hidden.</p>
+            {{/hide_content}}
+            {{^hide_content}}
+                <p>
+                <img src="{{picture}}" style="width: 50px; float: left; padding-right: 1rem" />
+                {{name}}<br />
+                {{date}}
+                </p>
+                <p style="margin-left: 3rem; white-space: pre-line">
+                    {{{body}}}
+                </p>
+                {{#delete_comment_id}}
+                <p>
+                    <a href="{{delete_comment_url}}/{{delete_comment_id}}">
+                        Delete this comment
+                    </a>
+                </p>
+                {{/delete_comment_id}}
+            {{/hide_content}}
+        {{/author}}
+    {{/deleted}}
+    <div class="divider"></div>
+{{/comments}}
+
+{{/allow_comments}}
+{{^allow_comments}}
+<p>
+Comments disabled for this post.
+</p>
+{{/allow_comments}}
+
+{{/post}}
+{{^post}}
+<p>Post not found</p>
+{{/post}}

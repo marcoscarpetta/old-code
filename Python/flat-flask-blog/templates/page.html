@@ -1,0 +1,70 @@
+<!--
+    Copyright (C) 2017 Marco Scarpetta
+    
+    This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. To view a copy of this license,
+    visit http://creativecommons.org/licenses/by-sa/4.0/.
+-->
+
+{{#author}}
+<h1>{{name}}</h1>
+
+{{^hide_picture}}
+<img src="{{picture}}" style="width: 100px;"></img>
+{{/hide_picture}}
+
+{{{bio}}}
+<h2>Posts:</h2>
+{{/author}}
+
+{{#tag}}
+<h1>Tag: {{tag}}</h1>
+{{/tag}}
+
+{{#posts_list}}
+<article class="post">
+
+    <header>
+        <a href="{{post_url}}/{{id}}">
+            <h1>{{title}}</h1>
+        </a>
+
+        <div class="post_infos">
+            <address>Author: <a href="/author/{{author}}">{{author_name}}</a></address><!--
+            
+         --><date datetime="{{date}}">{{display_date}}</date><!--
+            
+         -->{{#edit_date}}<date datetime="{{edit_date}}" id="edit_date">
+                Last modified on: {{display_edit_date}}
+            </date>{{/edit_date}}
+        </div>
+        
+        <div id="tags">
+            {{#tags}}
+            <a href="/tag/{{.}}">{{.}}</a>
+            {{/tags}}
+        </div>
+    </header>
+    
+    <div class="divider"></div>
+
+    {{{summary}}}
+
+    <a href="{{post_url}}/{{id}}">Continue reading...</a>
+    <div class="post_divider"></div>
+    
+</article>
+{{/posts_list}}
+{{^posts_list}}
+<p>No posts</p>
+{{/posts_list}}
+
+<div style="text-align: center;">
+    {{#prev_page_url}}
+    <a class="button_blue" href="{{prev_page_url}}">◀ Previous page</a>
+    {{/prev_page_url}}
+
+    {{#next_page_url}}
+    <a class="button_blue" href="{{next_page_url}}">Next page ▶</a>  
+    {{/next_page_url}}
+</div>

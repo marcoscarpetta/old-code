@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright (C) 2017 Marco Scarpetta
+    
+    This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. To view a copy of this license,
+    visit http://creativecommons.org/licenses/by-sa/4.0/.
+-->
+
+<feed xmlns="http://www.w3.org/2005/Atom">
+    
+    <title>Blog Name</title>
+    <link rel="self" href="http://example.com" />
+    <link href="http://example.com"/>
+    <updated>{{update_time}}</updated>
+    <author>
+        <name>Blog Author Name</name>
+    </author>
+    <id>http://example.com</id>
+    <icon>{{static_url}}/favicon.png</icon>
+    <subtitle>Blog description</subtitle>
+    
+    {{#posts_list}}
+        <entry>
+        <title>{{title}}</title>
+        <link href="{{post_url}}/{{id}}"/>
+        <id>{{post_url}}/{{id}}</id>
+        <updated>{{date}}</updated>
+        <author>
+            <name>{{author_name}}</name>
+        </author>
+        <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">{{{body}}}</div></content>
+        <summary type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">{{{summary}}}</div></summary>
+        {{#tags}}
+            <category term="{{.}}"/>
+        {{/tags}}
+        </entry>
+    {{/posts_list}}
+    
+</feed>

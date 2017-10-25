@@ -1,0 +1,232 @@
+@charset "UTF-8";
+
+/*
+ *  Copyright (C) 2017 Marco Scarpetta
+ *
+ *  This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+ *  International License. To view a copy of this license,
+ *  visit http://creativecommons.org/licenses/by-sa/4.0/.
+ */
+
+/* Global style */
+html {
+    font-size: 18px;
+}
+
+body {
+    width: 100%;
+    font-size: 1rem;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #202020;
+    margin: 0px 0px;
+    padding: 0px 0px;
+}
+
+a {
+    text-decoration: none;
+    color: #0A5AFF;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #1E6EFF;
+}
+
+/* Site header */
+#site_header {
+    background-color: #fff;
+    text-align: center;
+    padding: 3vmin 0px;
+}
+
+#site_header img {
+    height: 6rem;
+}
+
+#main_menu {
+    background-color: #37f;
+}
+
+#main_menu a {
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.8rem 0.8rem;
+    color: #fff;
+    text-decoration: none;
+}
+
+#main_menu a:hover {
+    background-color: #39f;
+    text-decoration: none;
+}
+
+/* Main content */
+#content {
+    min-height: 80vh;
+    padding: 2rem 5vw 1rem 5vw;
+}
+
+.divider {
+    height: 1px;
+    display: block;
+    background-image: linear-gradient( 90deg, #bbb, #fff );
+    margin: 1rem 0px;
+}
+
+.divider_center {
+    height: 1px;
+    display: block;
+    background-image: linear-gradient( 90deg, #fff, #bbb 50%, #fff );
+    margin: 1rem 0px;
+}
+
+.post_divider {
+    height: 1px;
+    display: block;
+    background: #ddd;
+    margin: 1rem 0px;
+}
+
+/* Single post */
+.post h1 {
+    font-size: 1.75rem;
+}
+
+.post h2 {
+    font-size: 1.5rem;
+}
+
+.post h3 {
+    font-size: 1.25rem;
+}
+
+.post > header h1 {
+    font-size: 2rem;
+}
+
+.post_infos {
+    padding-bottom: 1rem;
+}
+
+.post_infos * {
+    display: inline-block;
+    font-size: 0.9rem;
+    font-style: normal;
+}
+
+.post_infos address {
+    padding-right: 0.5rem;
+    margin-right: 0.5rem;
+    border-right: 1px solid #444;
+}
+
+.button_blue, .button_green, .button_red, button {
+    font-size: 1rem;
+    display: inline-block;
+    padding: 0.3rem 0.5rem;
+    margin: 0.2rem;
+    text-decoration: none;
+    border-radius: 0.2rem;
+    border: none;
+}
+
+.button_blue:hover, .button_green:hover, .button_red:hover {
+    text-decoration: none;
+}
+
+.button_blue, button {
+    background-color: #37f;
+    color: #fff;
+}
+
+.button_blue:hover, button:hover {
+    background-color: #39f;
+    color: #fff;
+}
+
+.button_green {
+    background-color: #0a0;
+    color: #fff;
+}
+
+.button_green:hover {
+    background-color: #0b0;
+    color: #fff;
+}
+
+.button_red {
+    background-color: #f40;
+    color: #fff;
+}
+
+.button_red:hover {
+    background-color: #f50;
+    color: #fff;
+}
+
+#edit_date {
+    padding-left: 0.5rem;
+    margin-left: 0.5rem;
+    border-left: 1px solid #444;
+}
+
+#tags a {
+    text-decoration: none;
+    background-color: #1E6EFF;
+    color: #fff;
+    padding: 0.2rem 0.5rem;
+    display: inline-block;
+}
+
+#tags a:hover {
+    background-color: #4488ff;
+}
+
+footer {
+    padding: 1rem 5vw 2rem 5vw;
+    text-align: center;
+    background-color: #fff;
+    font-size: 0.8rem;
+    display: block;
+}
+
+/* admin pages style */
+input, textarea {
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.delete-dialog {
+    position: fixed;
+    display: none;
+    text-align: center;
+    background: #ff4;
+    border: 2px solid #444;
+    width: 80%;
+    top: 30vh;
+    left: 10vw;
+}
+
+.delete-dialog:target {
+    display: block;
+}
+
+.admin_table {
+     border-collapse: collapse;
+}
+
+.admin_table td {
+     border: 2px solid #999;
+     padding: 1vh 1vw;
+}
+
+.error {
+    display: inline-block;
+    padding: 1vw 1vw;
+    background: rgba(255, 0, 0, 0.5);
+}
+
+.hide {
+    display: none;
+}

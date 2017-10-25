@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<!--
+    Copyright (C) 2017 Marco Scarpetta
+    
+    This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. To view a copy of this license,
+    visit http://creativecommons.org/licenses/by-sa/4.0/.
+-->
+
+<head>
+    <title>Blog Name | {{title}}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{static_url}}/style.css" type="text/css">
+    <link rel="SHORTCUT ICON" href="{{static_url}}/favicon.png">
+</head>
+<body>
+
+    <header>
+        <div id="site_header">
+            <a href="{{index_url}}" style="text-decoration:none">
+                <h1>Blog Name</h1>
+            </a>
+        </div>
+        
+        <nav id="main_menu">
+            <a href="{{index_url}}">Home Page</a>
+        </nav>
+    </header>
+    
+    <div id="content">
+        {{{content}}}
+    </div>
+
+    <footer>
+        <p>Copyright informations, privacy policy...</p>
+    </footer>
+</body>
+</html>

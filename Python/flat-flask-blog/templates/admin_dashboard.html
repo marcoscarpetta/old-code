@@ -1,0 +1,92 @@
+<!--
+    Copyright (C) 2017 Marco Scarpetta
+    
+    This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. To view a copy of this license,
+    visit http://creativecommons.org/licenses/by-sa/4.0/.
+-->
+
+{{#logged}}
+<p>
+    <a href="{{edit_profile_url}}" class="button_green">Edit profile</a>
+    <a href="{{logout_url}}?redirect_url={{admin_dashboard_url}}" class="button_red">Logout</a>
+</p>
+
+<p>
+    <a href="{{new_post_url}}">New post</a>
+</p>
+
+<p>
+    Edit old posts:
+</p>
+
+<table class="admin_table">
+    <tr>
+        <td>Title</td>
+        <td>Author</td>
+        <td>Date</td>
+        <td>Comments</td>
+        <td></td>
+        <td></td>
+    </tr>
+    {{#posts_list}}
+        <tr>
+            <td><a href="{{post_url}}/{{id}}">{{title}}</a></td>
+            <td>{{author}}</td>
+            <td>{{display_date}}</td>
+            <td>{{comments_count}}</td>
+            <td><a href="{{edit_post_url}}/{{id}}">Edit</a></td>
+            <td><a href="#delete-{{id}}">Delete</a></td>
+            
+            <div class="delete-dialog" id="delete-{{id}}">
+                <p>Confirm deletion of post <b>"{{title}}"</b>?</p>
+                <p><a href="{{delete_post_url}}/{{id}}">Yes (Delete)</a></p>
+                <p><a href="#exit">No (Don't delete)</a></p>
+            </div>
+        </tr>
+    {{/posts_list}}
+</table>
+
+<p>
+    Edit users:
+</p>
+
+<table class="admin_table">
+    {{#users_list}}
+        <tr>
+            <td>{{level}}</td>
+            <td>{{username}}</td>
+            <td>{{name}}</td>
+            <td>{{email}}</td>
+            <td><a href="{{toggle_block_user_url}}/{{username}}">
+                {{#blocked}}Unlock{{/blocked}}
+                {{^blocked}}Block{{/blocked}}
+            </a></td>
+            <td><a href="{{toggle_hide_content_url}}/{{username}}">
+                {{#hide_content}}Show content{{/hide_content}}
+                {{^hide_content}}Hide content{{/hide_content}}
+            </a></td>
+        </tr>
+    {{/users_list}}
+</table>
+
+<p>
+    <a href="{{backup_url}}" class="button_blue">Backup</a>
+</p>
+
+<p style="font-size: 2rem; color: red">Warning</p>
+
+<p>
+If you restore a backup, all your blog data will be deleted!
+</p>
+
+<form action="{{restore_backup_url}}" method="post" enctype='multipart/form-data' encoding='multipart/form-data'>
+    <p>
+        <input type="file" name="file">
+        <button type="submit" name="restore_backup" class="button_red">Restore Backup</button>
+    </p>
+</form>
+{{/logged}}
+{{^logged}}
+<a href="{{oauth2_login_url}}/google?source_url={{admin_dashboard_url}}">Login with Google</a>
+{{/logged}}
